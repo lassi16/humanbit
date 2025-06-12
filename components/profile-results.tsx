@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -34,6 +34,7 @@ export function ProfileResults({
   );
   const [currentPage, setCurrentPage] = useState(1);
   const profilesPerPage = 6;
+  const [displayedProfiles, setDisplayedProfiles] = useState<ProfileData[]>([]);
 
   // Mock profile data
   const mockProfiles: ProfileData[] = [
@@ -481,6 +482,25 @@ export function ProfileResults({
     },
   ];
 
+  useEffect(() => {
+    const shuffleArray = (array: ProfileData[]) => {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    };
+
+    const shuffled = shuffleArray([...mockProfiles]);
+    setDisplayedProfiles(shuffled.slice(0, 20));
+  }, []); // Run only once on mount
+
+  const totalPages = Math.ceil(displayedProfiles.length / profilesPerPage);
+  const currentProfiles = displayedProfiles.slice(
+    (currentPage - 1) * profilesPerPage,
+    currentPage * profilesPerPage
+  );
+
   const ProfileCard = ({ profile }: { profile: ProfileData }) => (
     <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:scale-105">
       <div className="flex items-start space-x-4 mb-4">
@@ -566,7 +586,8 @@ export function ProfileResults({
                 Candidate Results
               </h3>
               <p className="text-gray-400">
-                Found 89 candidates matching your criteria
+                Found {displayedProfiles.length} candidates matching your
+                criteria
               </p>
             </div>
           </div>
@@ -654,14 +675,9 @@ export function ProfileResults({
               : "grid-cols-1"
           }`}
         >
-          {mockProfiles
-            .slice(
-              (currentPage - 1) * profilesPerPage,
-              currentPage * profilesPerPage
-            )
-            .map((profile) => (
-              <ProfileCard key={profile.id} profile={profile} />
-            ))}
+          {currentProfiles.map((profile) => (
+            <ProfileCard key={profile.id} profile={profile} />
+          ))}
         </div>
 
         {/* Pagination */}
@@ -670,10 +686,10 @@ export function ProfileResults({
             Showing{" "}
             {Math.min(
               (currentPage - 1) * profilesPerPage + 1,
-              mockProfiles.length
+              displayedProfiles.length
             )}
-            -{Math.min(currentPage * profilesPerPage, mockProfiles.length)} of{" "}
-            {mockProfiles.length} candidates
+            -{Math.min(currentPage * profilesPerPage, displayedProfiles.length)}{" "}
+            of {displayedProfiles.length} candidates
           </div>
           <div className="flex space-x-2">
             <Button
@@ -685,36 +701,27 @@ export function ProfileResults({
             >
               Previous
             </Button>
-            {[...Array(Math.ceil(mockProfiles.length / profilesPerPage))].map(
-              (_, index) => (
-                <Button
-                  key={index + 1}
-                  onClick={() => setCurrentPage(index + 1)}
-                  className={
-                    currentPage === index + 1
-                      ? "bg-white text-black hover:bg-white/90"
-                      : "bg-gray-700 text-white hover:bg-gray-600 border-white/20"
-                  }
-                  size="sm"
-                >
-                  {index + 1}
-                </Button>
-              )
-            )}
+            {[...Array(totalPages)].map((_, index) => (
+              <Button
+                key={index + 1}
+                onClick={() => setCurrentPage(index + 1)}
+                className={
+                  currentPage === index + 1
+                    ? "bg-white text-black hover:bg-white/90"
+                    : "bg-gray-700 text-white hover:bg-gray-600 border-white/20"
+                }
+                size="sm"
+              >
+                {index + 1}
+              </Button>
+            ))}
             <Button
               variant="outline"
               size="sm"
               onClick={() =>
-                setCurrentPage((prev) =>
-                  Math.min(
-                    prev + 1,
-                    Math.ceil(mockProfiles.length / profilesPerPage)
-                  )
-                )
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
               }
-              disabled={
-                currentPage === Math.ceil(mockProfiles.length / profilesPerPage)
-              }
+              disabled={currentPage === totalPages}
               className="border-white/20 text-white hover:bg-white/10"
             >
               Next
