@@ -577,7 +577,7 @@ export function JobDescriptionDisplay({
       <div className="pt-6">
         <Button
           onClick={onProceed}
-          className="w-full flex items-center justify-center py-4 bg-white text-black hover:bg-white/90 hover:scale-105 transition-transform duration-200"
+          className="w-full flex items-center justify-center py-6 bg-white text-black text-lg hover:bg-white/90 hover:scale-105 transition-transform duration-200"
         >
           Proceed to LinkedIn Filters <ArrowRight className="ml-2 w-4 h-4" />
         </Button>

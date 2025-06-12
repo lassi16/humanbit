@@ -8,7 +8,7 @@ import { LinkedInFilterInterface } from "@/components/linkedin-filter-interface"
 import { AgentWorkflow } from "@/components/agent-workflow";
 import { ProfileResults } from "@/components/profile-results";
 import { Brain, Search, Target, Users } from "lucide-react";
-import type { JobDescription } from "@/types";
+import type { JobDescription, LinkedInFilter } from "@/types";
 
 export function TalentSearchSection() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,6 +19,7 @@ export function TalentSearchSection() {
     null
   );
   const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedFilters, setSelectedFilters] = useState<LinkedInFilter[]>([]);
 
   const contentRef = useRef<HTMLDivElement>(null);
   const stepsRef = useRef<HTMLDivElement>(null);
@@ -209,6 +210,7 @@ export function TalentSearchSection() {
               jobDescription={jobDescription}
               onOptimize={handleOptimizeFilters}
               onBack={() => setCurrentStep("generate")}
+              onFiltersChange={setSelectedFilters}
             />
           )}
 
@@ -224,6 +226,7 @@ export function TalentSearchSection() {
             <ProfileResults
               onNewSearch={resetSearch}
               onRefineFilters={() => setCurrentStep("filters")}
+              selectedFilters={selectedFilters}
             />
           )}
         </div>

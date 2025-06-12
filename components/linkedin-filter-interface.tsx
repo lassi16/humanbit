@@ -14,6 +14,7 @@ interface LinkedInFilterInterfaceProps {
   jobDescription: JobDescription | null;
   onOptimize: () => void;
   onBack: () => void;
+  onFiltersChange: (filters: LinkedInFilter[]) => void;
 }
 
 interface LocationSuggestion {
@@ -37,6 +38,7 @@ export function LinkedInFilterInterface({
   jobDescription,
   onOptimize,
   onBack,
+  onFiltersChange,
 }: LinkedInFilterInterfaceProps) {
   const [filters, setFilters] = useState<LinkedInFilter[]>([]);
   const [searchInputs, setSearchInputs] = useState({
@@ -113,7 +115,7 @@ export function LinkedInFilterInterface({
         });
 
         console.log(
-          "📥 Received location suggestions:",
+          "📥 Received location suggestions from API:",
           JSON.stringify(data, null, 2)
         );
 
@@ -123,17 +125,20 @@ export function LinkedInFilterInterface({
 
         const locationSuggestions = data.suggestions.map((item: any) => ({
           urn: item.urn,
-          text: item.title,
+          text: item.text,
           type: "location",
-          displayValue: item.title,
+          displayValue: item.text,
         }));
 
         console.log(
-          "✨ Processed location suggestions:",
+          "✨ Processed location suggestions (before setting state):",
           JSON.stringify(locationSuggestions, null, 2)
         );
         setLocationSuggestions(locationSuggestions);
         setShowLocationSuggestions(true);
+        console.log(
+          "✅ Location suggestions set and showLocationSuggestions is true."
+        );
       }
     } catch (err: any) {
       console.error(`❌ Error fetching ${type} suggestions:`, {
@@ -159,6 +164,10 @@ export function LinkedInFilterInterface({
   };
 
   useEffect(() => {
+    console.log(
+      "🔍 Triggering fetchSuggestions for jobTitle with:",
+      searchInputs.jobTitle
+    );
     const handler = setTimeout(() => {
       fetchSuggestions("jobTitle", searchInputs.jobTitle);
     }, 500);
@@ -166,6 +175,10 @@ export function LinkedInFilterInterface({
   }, [searchInputs.jobTitle]);
 
   useEffect(() => {
+    console.log(
+      "🔍 Triggering fetchSuggestions for company with:",
+      searchInputs.company
+    );
     const handler = setTimeout(() => {
       fetchSuggestions("company", searchInputs.company);
     }, 500);
@@ -173,9 +186,13 @@ export function LinkedInFilterInterface({
   }, [searchInputs.company]);
 
   useEffect(() => {
+    console.log(
+      "🔍 Triggering fetchSuggestions for location with:",
+      searchInputs.location
+    );
     const handler = setTimeout(() => {
       fetchSuggestions("location", searchInputs.location);
-    }, 800);
+    }, 300);
     return () => clearTimeout(handler);
   }, [searchInputs.location]);
 
@@ -359,6 +376,7 @@ export function LinkedInFilterInterface({
         jobTitleRef.current &&
         !jobTitleRef.current.contains(event.target as Node)
       ) {
+        console.log("🚪 Closing jobTitle suggestions via outside click.");
         setShowJobTitleSuggestions(false);
       }
     };
@@ -374,6 +392,7 @@ export function LinkedInFilterInterface({
         companyRef.current &&
         !companyRef.current.contains(event.target as Node)
       ) {
+        console.log("🚪 Closing company suggestions via outside click.");
         setShowCompanySuggestions(false);
       }
     };
@@ -389,6 +408,7 @@ export function LinkedInFilterInterface({
         locationRef.current &&
         !locationRef.current.contains(event.target as Node)
       ) {
+        console.log("🚪 Closing location suggestions via outside click.");
         setShowLocationSuggestions(false);
       }
     };
@@ -397,6 +417,10 @@ export function LinkedInFilterInterface({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [locationRef]);
+
+  useEffect(() => {
+    onFiltersChange(filters);
+  }, [filters, onFiltersChange]);
 
   return (
     <div className="space-y-8 p-6 bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl shadow-2xl relative">
@@ -431,7 +455,12 @@ export function LinkedInFilterInterface({
                       jobTitle: e.target.value,
                     }))
                   }
-                  onFocus={() => setShowJobTitleSuggestions(true)}
+                  onFocus={() => {
+                    console.log(
+                      "💡 Job Title input focused. Setting showJobTitleSuggestions to true."
+                    );
+                    setShowJobTitleSuggestions(true);
+                  }}
                   className="pl-10 bg-white/5 border-white/20 text-white"
                 />
                 {loadingSuggestions.jobTitle && (
@@ -440,12 +469,9 @@ export function LinkedInFilterInterface({
                   </div>
                 )}
               </div>
-              {error && (
-                <p className="text-sm text-red-500 mt-1">Error: {error}</p>
-              )}
               {/* Job Title Suggestions */}
               {jobTitleSuggestions.length > 0 && showJobTitleSuggestions && (
-                <Card className="absolute z-10 w-full mt-1 max-h-60 overflow-auto bg-slate-800 border-slate-700">
+                <Card className="absolute z-10 w-full mt-1 max-h-60 overflow-auto bg-zinc-900 opacity-100 border-slate-700">
                   <div className="p-2">
                     {jobTitleSuggestions.map((title, index) => (
                       <div
@@ -508,7 +534,12 @@ export function LinkedInFilterInterface({
                       company: e.target.value,
                     }))
                   }
-                  onFocus={() => setShowCompanySuggestions(true)}
+                  onFocus={() => {
+                    console.log(
+                      "💡 Company input focused. Setting showCompanySuggestions to true."
+                    );
+                    setShowCompanySuggestions(true);
+                  }}
                   className="pl-10 bg-white/5 border-white/20 text-white"
                 />
                 {loadingSuggestions.company && (
@@ -522,8 +553,9 @@ export function LinkedInFilterInterface({
                   Error: {companyError}
                 </p>
               )}
+
               {companySuggestions.length > 0 && showCompanySuggestions && (
-                <Card className="absolute z-10 w-full mt-1 max-h-60 overflow-auto bg-slate-800 border-slate-700">
+                <Card className="absolute z-10 w-full mt-1 max-h-60 overflow-auto bg-zinc-900 opacity-100 border-slate-700">
                   <div className="p-2">
                     {companySuggestions.map((suggestion, index) => (
                       <div
@@ -593,7 +625,12 @@ export function LinkedInFilterInterface({
                       location: e.target.value,
                     }))
                   }
-                  onFocus={() => setShowLocationSuggestions(true)}
+                  onFocus={() => {
+                    console.log(
+                      "💡 Location input focused. Setting showLocationSuggestions to true."
+                    );
+                    setShowLocationSuggestions(true);
+                  }}
                   className="pl-10 bg-white/5 border-white/20 text-white"
                 />
                 {loadingSuggestions.location && (
@@ -602,10 +639,9 @@ export function LinkedInFilterInterface({
                   </div>
                 )}
               </div>
-              {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
 
               {showLocationSuggestions && locationSuggestions.length > 0 && (
-                <Card className="absolute z-10 w-full mt-1 max-h-60 overflow-auto bg-white/5 border-white/20">
+                <Card className="absolute z-10 w-3/5 mt-1 max-h-60 overflow-auto bg-zinc-900 opacity-100 border-white/20">
                   <div className="p-2">
                     {locationSuggestions.map((suggestion, index) => (
                       <div
@@ -686,7 +722,7 @@ export function LinkedInFilterInterface({
                   onClick={() =>
                     addFilter("keyword", searchInputs.keyword, "include")
                   }
-                  className="bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border-blue-600/30 px-4 py-2 text-sm"
+                  className="bg-green-600/20 hover:bg-green-600/30 text-black-400 border-blue-600/30 px-4 py-2 text-sm"
                 >
                   Add Keyword
                 </Button>

@@ -29,7 +29,7 @@ export async function GET(request: Request) {
     }
 
     console.log('\n=== 🔍 MAKING RAPIDAPI REQUEST ===');
-    console.log('API Key:', RAPIDAPI_KEY);
+    console.log('Using API Key:', process.env.RAPIDAPI_KEY ? 'From environment variable' : 'Hardcoded fallback');
     console.log('API Host:', RAPIDAPI_HOST);
     
     const requestConfig = {
@@ -66,18 +66,23 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Invalid response format' }, { status: 500 });
     }
 
-    // Transform the response data to match the expected format
-    console.log('\n=== 🔄 TRANSFORMING RESPONSE DATA ===');
-    const suggestions = response.data.map((item: any) => {
-      console.log('Processing item:', JSON.stringify(item, null, 2));
-      return {
-        id: item.urn || item.id,
-        text: item.title || item.name,
-        type: item.type || 'location',
-        countryCode: item.countryCode || '',
-        displayValue: item.title || item.name
-      };
-    });
+    let suggestions: LocationSuggestion[] = [];
+    if (response.data && Array.isArray(response.data.suggestions)) {
+      // Transform the response data to match the expected format
+      console.log('\n=== 🔄 TRANSFORMING RESPONSE DATA ===');
+      suggestions = response.data.suggestions.map((item: any) => {
+        console.log('Processing item:', JSON.stringify(item, null, 2));
+        return {
+          urn: item.urn || item.id,
+          text: item.title,
+          type: item.type || 'location',
+          countryCode: item.countryCode || '',
+          displayValue: item.title
+        };
+      });
+    } else {
+      console.warn('⚠️ RapidAPI response data does not contain a suggestions array or is not an object. Returning empty suggestions.', response.data);
+    }
 
     console.log('\n=== ✅ FINAL TRANSFORMED SUGGESTIONS ===');
     console.log('Number of suggestions:', suggestions.length);
