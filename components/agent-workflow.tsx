@@ -78,9 +78,9 @@ export function AgentWorkflow({
           )
         );
 
-        // Simulate processing time (increased duration)
+        // Simulate processing time (reduced duration)
         await new Promise((resolve) =>
-          setTimeout(resolve, 4000 + Math.random() * 3000)
+          setTimeout(resolve, 1000 + Math.random() * 500)
         );
 
         // Update step to completed with mock results
@@ -186,11 +186,6 @@ export function AgentWorkflow({
                   <h4 className="text-lg font-semibold text-white">
                     {step.title}
                   </h4>
-                  {step.resultCount && (
-                    <div className="text-sm text-gray-300 bg-white/10 px-3 py-1 rounded-full">
-                      {step.resultCount} candidates
-                    </div>
-                  )}
                 </div>
 
                 <p className="text-gray-400 mb-2">{step.description}</p>

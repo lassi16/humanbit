@@ -68,14 +68,12 @@ export function ProfileResults({
         ? "flex flex-col justify-between"
         : "flex items-center justify-between space-x-4 py-4 px-6"
     }`;
-    const profileInfoClasses = `${
-      viewMode === "grid"
-        ? "flex items-start space-x-4 mb-4"
-        : "flex items-center space-x-4"
+    const profileInfoClasses = `flex items-center space-x-4 ${
+      viewMode === "grid" ? "mb-4" : ""
     }`;
     const userIconClasses = `${
       viewMode === "grid" ? "w-16 h-16" : "w-10 h-10"
-    } text-gray-400 rounded-full object-cover border-2 border-white/30 bg-white/10`;
+    } text-gray-200 rounded-full object-cover border-2 border-white/30 bg-gray-700`;
     const nameClasses = `${
       viewMode === "grid" ? "text-lg" : "text-base"
     } font-semibold text-white`;
@@ -85,9 +83,7 @@ export function ProfileResults({
     const buttonClasses = `bg-white text-black hover:bg-gray-100 flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-colors duration-200 ${
       viewMode === "grid" ? "max-w-sm" : "py-1 px-3 min-w-[180px] flex-shrink-0"
     }`;
-    const linkedinIconClasses = `${
-      viewMode === "grid" ? "" : "fill-[#0A66C2]"
-    } w-4 h-4 text-[#0A66C2]`;
+    const linkedinIconClasses = `w-4 h-4`;
 
     return (
       <div className={cardClasses}>
@@ -95,7 +91,7 @@ export function ProfileResults({
           <CircleUser className={userIconClasses} />
           <div className="flex-1">
             <div className="flex items-center justify-between mb-2">
-              <h3 className={nameClasses}>{profile.name}</h3>
+              <h3 className={`${nameClasses} truncate`}>{profile.name}</h3>
             </div>
           </div>
         </div>
@@ -103,7 +99,7 @@ export function ProfileResults({
         <div className={buttonContainerClasses}>
           <Button asChild variant="secondary" className={buttonClasses}>
             <a href={profile.url} target="_blank" rel="noopener noreferrer">
-              <Linkedin className={linkedinIconClasses} />
+              <Linkedin className="w-4 h-4" fill="#0A66C2" stroke="#0A66C2" />
               View LinkedIn Profile
             </a>
           </Button>

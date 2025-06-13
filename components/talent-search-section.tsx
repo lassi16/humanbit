@@ -38,6 +38,31 @@ export function TalentSearchSection() {
     }
   }, [currentStep]);
 
+  useEffect(() => {
+    if (
+      jobDescription?.requiredSkills &&
+      jobDescription.requiredSkills.length > 0
+    ) {
+      const skillFilters: LinkedInFilter[] = jobDescription.requiredSkills.map(
+        (skill) => ({
+          type: "include",
+          value: skill,
+          category: "skills",
+        })
+      );
+      // Merge with existing filters, ensuring no duplicates
+      setSelectedFilters((prevFilters) => {
+        const newFilters = skillFilters.filter(
+          (sf) =>
+            !prevFilters.some(
+              (pf) => pf.value === sf.value && pf.category === sf.category
+            )
+        );
+        return [...prevFilters, ...newFilters];
+      });
+    }
+  }, [jobDescription?.requiredSkills]);
+
   const handleJobGenerated = (job: JobDescription) => {
     setJobDescription(job);
     setCurrentStep("generate");
