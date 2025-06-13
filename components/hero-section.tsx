@@ -20,27 +20,27 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-black to-slate-800" />
 
         {/* Floating Glass Elements with Independent Movement */}
-        <div className="absolute w-96 h-96 bg-white/5 backdrop-blur-sm rounded-full border border-white/10 animate-float-slow opacity-60 left-1/4 top-1/4 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute w-96 h-96 bg-white/5 backdrop-blur-sm rounded-full border border-white/10 animate-float-slow opacity-60 left-1/4 top-1/4 transform -translate-x-1/2 -translate-y-1/2 animate-light-bulb">
           <div className="absolute inset-0 rounded-full border border-white/5 animate-pulse-border-1" />
           <div className="absolute inset-2 rounded-full border border-white/3 animate-pulse-border-2" />
           <div className="absolute inset-4 rounded-full border border-white/2 animate-pulse-border-3" />
         </div>
 
-        <div className="absolute w-64 h-64 bg-white/3 backdrop-blur-sm rounded-full border border-white/8 animate-float-medium opacity-40 right-1/4 bottom-1/3 transform translate-x-1/2 translate-y-1/2">
+        <div className="absolute w-64 h-64 bg-white/3 backdrop-blur-sm rounded-full border border-white/8 animate-float-medium opacity-40 right-1/4 bottom-1/3 transform translate-x-1/2 translate-y-1/2 animate-light-bulb">
           <div className="absolute inset-0 rounded-full border border-white/4 animate-pulse-border-2" />
           <div className="absolute inset-3 rounded-full border border-white/2 animate-pulse-border-1" />
         </div>
 
-        <div className="absolute w-48 h-48 bg-white/2 backdrop-blur-sm rounded-full border border-white/6 animate-float-fast opacity-30 left-3/4 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute w-48 h-48 bg-white/2 backdrop-blur-sm rounded-full border border-white/6 animate-float-fast opacity-30 left-3/4 top-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-light-bulb">
           <div className="absolute inset-0 rounded-full border border-white/3 animate-pulse-border-3" />
           <div className="absolute inset-2 rounded-full border border-white/1 animate-pulse-border-1" />
         </div>
 
-        <div className="absolute w-32 h-32 bg-white/1 backdrop-blur-sm rounded-full border border-white/4 animate-float-reverse opacity-20 left-1/6 bottom-1/4 transform translate-x-1/2 translate-y-1/2">
+        <div className="absolute w-32 h-32 bg-white/1 backdrop-blur-sm rounded-full border border-white/4 animate-float-reverse opacity-20 left-1/6 bottom-1/4 transform translate-x-1/2 translate-y-1/2 animate-light-bulb">
           <div className="absolute inset-0 rounded-full border border-white/2 animate-pulse-border-2" />
         </div>
 
-        <div className="absolute w-80 h-80 bg-white/4 backdrop-blur-sm rounded-full border border-white/7 animate-float-diagonal opacity-25 right-1/6 top-1/6 transform translate-x-1/2 -translate-y-1/2">
+        <div className="absolute w-80 h-80 bg-white/4 backdrop-blur-sm rounded-full border border-white/7 animate-float-diagonal opacity-25 right-1/6 top-1/6 transform translate-x-1/2 -translate-y-1/2 animate-light-bulb">
           <div className="absolute inset-0 rounded-full border border-white/3 animate-pulse-border-1" />
           <div className="absolute inset-4 rounded-full border border-white/2 animate-pulse-border-3" />
         </div>
