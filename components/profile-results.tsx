@@ -23,7 +23,7 @@ interface ProfileResultsProps {
   onNewSearch: () => void;
   onRefineFilters: () => void;
   selectedFilters: LinkedInFilter[];
-  optimizedProfiles: { name: string; linkedin_profile: string }[];
+  optimizedProfiles: { name: string; url: string }[];
 }
 
 export function ProfileResults({
@@ -61,7 +61,7 @@ export function ProfileResults({
   const ProfileCard = ({
     profile,
   }: {
-    profile: { name: string; linkedin_profile: string };
+    profile: { name: string; url: string };
   }) => {
     const cardClasses = `bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:scale-105 ${
       viewMode === "grid"
@@ -102,11 +102,7 @@ export function ProfileResults({
 
         <div className={buttonContainerClasses}>
           <Button asChild variant="secondary" className={buttonClasses}>
-            <a
-              href={profile.linkedin_profile}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={profile.url} target="_blank" rel="noopener noreferrer">
               <Linkedin className={linkedinIconClasses} />
               View LinkedIn Profile
             </a>
