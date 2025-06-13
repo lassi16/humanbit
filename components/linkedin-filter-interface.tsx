@@ -12,7 +12,10 @@ import { Label } from "@/components/ui/label";
 
 interface LinkedInFilterInterfaceProps {
   jobDescription: JobDescription | null;
-  onOptimize: () => void;
+  onOptimize: (
+    filters: LinkedInFilter[],
+    jobDescription: JobDescription | null
+  ) => void;
   onBack: () => void;
   onFiltersChange: (filters: LinkedInFilter[]) => void;
 }
@@ -783,10 +786,10 @@ export function LinkedInFilterInterface({
           ← Back to Job Description
         </Button>
         <Button
-          onClick={onOptimize}
+          onClick={(e) => onOptimize(filters, jobDescription)}
           className="bg-white text-black hover:bg-white/90 hover:scale-105 transition-transform duration-200"
         >
-          Optimize with AI
+          Optimize with AI <ArrowRight className="ml-2 w-4 h-4" />
         </Button>
       </div>
     </div>

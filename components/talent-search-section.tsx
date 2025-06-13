@@ -9,6 +9,7 @@ import { AgentWorkflow } from "@/components/agent-workflow";
 import { ProfileResults } from "@/components/profile-results";
 import { Brain, Search, Target, Users } from "lucide-react";
 import type { JobDescription, LinkedInFilter } from "@/types";
+import axios from "axios";
 
 export function TalentSearchSection() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,6 +21,7 @@ export function TalentSearchSection() {
   );
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState<LinkedInFilter[]>([]);
+  const [optimizedProfiles, setOptimizedProfiles] = useState<any[]>([]);
 
   const contentRef = useRef<HTMLDivElement>(null);
   const stepsRef = useRef<HTMLDivElement>(null);
@@ -89,8 +91,22 @@ export function TalentSearchSection() {
     setCurrentStep("filters");
   };
 
-  const handleOptimizeFilters = () => {
+  const handleOptimizeFilters = async (
+    filters: LinkedInFilter[],
+    jobDescription: JobDescription | null
+  ) => {
     setCurrentStep("optimize");
+    try {
+      const response = await axios.post("/api/optimize-linkedin-search", {
+        filters,
+        jobDescription,
+      });
+      console.log("Optimization successful:", response.data);
+      setOptimizedProfiles(response.data.profiles);
+    } catch (error) {
+      console.error("Optimization failed:", error);
+      // Handle error, show a message to the user
+    }
   };
 
   const handleShowResults = () => {
@@ -171,7 +187,7 @@ export function TalentSearchSection() {
         </div>
 
         {/* Step Content */}
-        <div className="max-w-6xl mx-auto scroll-mt-24" ref={contentRef}>
+        <div className="max-w-6xl mx-auto" ref={contentRef}>
           {currentStep === "input" && (
             <div className="text-center">
               <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-12 mb-8">
@@ -227,6 +243,7 @@ export function TalentSearchSection() {
               onNewSearch={resetSearch}
               onRefineFilters={() => setCurrentStep("filters")}
               selectedFilters={selectedFilters}
+              optimizedProfiles={optimizedProfiles}
             />
           )}
         </div>

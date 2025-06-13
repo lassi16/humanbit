@@ -1,0 +1,4 @@
+google-search-results==2.0.0
+python-dotenv==1.0.0
+langchain==0.0.275
+langchain-google-vertexai==0.0.23
